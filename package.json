@@ -1,0 +1,42 @@
+{
+  "name": "@msgcore/cli",
+  "version": "1.0.0",
+  "description": "Official CLI for MsgCore universal messaging gateway",
+  "main": "dist/index.js",
+  "bin": {
+    "msgcore": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"No tests for generated CLI - tested in backend\"",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@msgcore/sdk": "file:../sdk",
+    "commander": "^14.0.1",
+    "axios": "^1.12.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.8",
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "msgcore",
+    "cli",
+    "messaging",
+    "universal"
+  ],
+  "author": "MsgCore",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filipexyz/msgcore-cli.git"
+  },
+  "homepage": "https://github.com/filipexyz/msgcore-cli",
+  "bugs": {
+    "url": "https://github.com/filipexyz/msgcore-cli/issues"
+  }
+}
