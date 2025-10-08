@@ -112,7 +112,7 @@ const CONTRACTS = [
       "SentMessageListResponse": "export interface SentMessageListResponse {\n  messages: SentMessageResponse[];\n  pagination: {\n    total: number;\n    limit: number;\n    offset: number;\n    hasMore: boolean;\n  };\n}",
       "SentMessageResponse": "export interface SentMessageResponse {\n  id: string;\n  platform: string;\n  jobId: string | null;\n  providerMessageId: string | null;\n  targetChatId: string;\n  targetUserId: string | null;\n  targetType: string;\n  messageText: string | null;\n  messageContent: Record<string, unknown> | null;\n  status: string;\n  errorMessage: string | null;\n  sentAt: Date | null;\n  createdAt: Date;\n}",
       "SignupDto": "export interface SignupDto {\n  email: string;\n  password: string;\n  name?: string;\n}",
-      "SupportedPlatformsResponse": "export interface SupportedPlatformsResponse {\n  platforms: Array<{\n    name: string;\n    displayName: string;\n    connectionType: string;\n    features: {\n      supportsWebhooks: boolean;\n      supportsPolling: boolean;\n      supportsWebSocket: boolean;\n    };\n    credentials: {\n      required: string[];\n      optional: string[];\n      example: Record<string, any>;\n    } | null;\n  }>;\n}",
+      "SupportedPlatformsResponse": "export interface SupportedPlatformsResponse {\n  platforms: Array<{\n    name: string;\n    displayName: string;\n    connectionType: string;\n    features: {\n      supportsWebhooks: boolean;\n      supportsPolling: boolean;\n      supportsWebSocket: boolean;\n    };\n    capabilities: Array<{\n      capability: string;\n      limitations?: string;\n    }>;\n    credentials: {\n      required: string[];\n      optional: string[];\n      example: Record<string, any>;\n    } | null;\n  }>;\n}",
       "TargetDto": "export interface TargetDto {\n  platformId: string;\n  type: TargetType;\n  id: string;\n}",
       "TargetType": "export type TargetType = 'user' | 'channel' | 'group';",
       "UpdateIdentityDto": "export interface UpdateIdentityDto {\n  displayName?: string;\n  email?: string;\n  metadata?: Record<string, any>;\n}",
@@ -2493,7 +2493,7 @@ class McpStdioServer {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.0' },
+        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.1' },
       },
     };
   }
