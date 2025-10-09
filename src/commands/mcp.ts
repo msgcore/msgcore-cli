@@ -2411,7 +2411,10 @@ class McpStdioServer {
       }
     }
 
-    if (required.length > 0) inputSchema.required = required;
+    if (required.length > 0) {
+      // Deduplicate required array for JSON Schema 2020-12 compliance
+      inputSchema.required = [...new Set(required)];
+    }
 
     return {
       name: `msgcore_${contract.contractMetadata.command.replace(/\s+/g, '_')}`,
@@ -2493,7 +2496,7 @@ class McpStdioServer {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.1' },
+        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.2' },
       },
     };
   }
