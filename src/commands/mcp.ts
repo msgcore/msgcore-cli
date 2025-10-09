@@ -568,6 +568,261 @@ const CONTRACTS = [
     }
   },
   {
+    "controller": "PlatformsController",
+    "method": "create",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/platforms",
+    "contractMetadata": {
+      "command": "platforms create",
+      "description": "Configure a new platform integration",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:write"
+      ],
+      "inputType": "CreatePlatformDto",
+      "outputType": "PlatformResponse",
+      "options": {
+        "platform": {
+          "required": true,
+          "description": "Platform type",
+          "choices": [
+            "discord",
+            "telegram",
+            "whatsapp-evo"
+          ],
+          "type": "string"
+        },
+        "name": {
+          "required": true,
+          "description": "Friendly name for the platform instance",
+          "type": "string"
+        },
+        "description": {
+          "description": "Optional description for the platform instance",
+          "type": "string"
+        },
+        "credentials": {
+          "required": true,
+          "description": "Platform credentials (JSON object). Use \"msgcore platforms supported\" to see required fields for each platform.",
+          "type": "object"
+        },
+        "isActive": {
+          "description": "Enable platform",
+          "default": true,
+          "type": "boolean"
+        },
+        "testMode": {
+          "description": "Enable test mode",
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "examples": [
+        {
+          "description": "Add Discord bot",
+          "command": "msgcore platforms create --platform discord --name \"Main Discord Bot\" --credentials '{\"token\":\"YOUR_DISCORD_BOT_TOKEN\"}'"
+        },
+        {
+          "description": "Add Telegram bot in test mode",
+          "command": "msgcore platforms create --platform telegram --name \"Test Telegram Bot\" --description \"Bot for testing purposes\" --credentials '{\"token\":\"YOUR_TELEGRAM_BOT_TOKEN\"}' --testMode true"
+        },
+        {
+          "description": "Add WhatsApp Evolution API",
+          "command": "msgcore platforms create --platform whatsapp-evo --name \"Production WhatsApp\" --credentials '{\"evolutionApiUrl\":\"https://your-evolution-api.com\",\"evolutionApiKey\":\"YOUR_EVOLUTION_API_KEY\"}'"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "findAll",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/platforms",
+    "contractMetadata": {
+      "command": "platforms list",
+      "description": "List configured platforms for project",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:read"
+      ],
+      "outputType": "PlatformResponse[]",
+      "examples": [
+        {
+          "description": "List all platforms",
+          "command": "msgcore platforms list"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "findOne",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/platforms/:id",
+    "contractMetadata": {
+      "command": "platforms get",
+      "description": "Get platform configuration details",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:read"
+      ],
+      "outputType": "PlatformResponse",
+      "options": {
+        "id": {
+          "required": true,
+          "description": "Platform ID",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Get platform details",
+          "command": "msgcore platforms get --id \"platform-123\""
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "update",
+    "httpMethod": "PATCH",
+    "path": "/api/v1/projects/:project/platforms/:id",
+    "contractMetadata": {
+      "command": "platforms update",
+      "description": "Update platform configuration",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:write"
+      ],
+      "inputType": "UpdatePlatformDto",
+      "outputType": "PlatformResponse",
+      "options": {
+        "name": {
+          "description": "Updated friendly name",
+          "type": "string"
+        },
+        "description": {
+          "description": "Updated description",
+          "type": "string"
+        },
+        "credentials": {
+          "description": "Updated credentials (JSON object)",
+          "type": "object"
+        },
+        "isActive": {
+          "description": "Enable/disable platform",
+          "type": "boolean"
+        },
+        "testMode": {
+          "description": "Enable/disable test mode",
+          "type": "boolean"
+        }
+      },
+      "examples": [
+        {
+          "description": "Update platform name and description",
+          "command": "msgcore platforms update --project my-project --id platform-123 --name \"Updated Bot Name\" --description \"New description\""
+        },
+        {
+          "description": "Update Telegram bot token",
+          "command": "msgcore platforms update --project my-project --id platform-123 --credentials '{\"token\":\"YOUR_NEW_TELEGRAM_TOKEN\"}'"
+        },
+        {
+          "description": "Disable platform",
+          "command": "msgcore platforms update --project my-project --id platform-123 --isActive false"
+        },
+        {
+          "description": "Enable test mode",
+          "command": "msgcore platforms update --project my-project --id platform-123 --testMode true"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "remove",
+    "httpMethod": "DELETE",
+    "path": "/api/v1/projects/:project/platforms/:id",
+    "contractMetadata": {
+      "command": "platforms delete",
+      "description": "Remove platform configuration",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:write"
+      ],
+      "outputType": "MessageResponse",
+      "options": {
+        "id": {
+          "required": true,
+          "description": "Platform ID",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Remove platform",
+          "command": "msgcore platforms delete --id \"platform-123\""
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "registerWebhook",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/platforms/:id/register-webhook",
+    "contractMetadata": {
+      "command": "platforms register-webhook",
+      "description": "Register webhook URL with platform provider",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:write"
+      ],
+      "outputType": "MessageResponse",
+      "options": {
+        "id": {
+          "required": true,
+          "description": "Platform ID",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Register Telegram webhook",
+          "command": "msgcore platforms register-webhook --id \"platform-123\""
+        }
+      ]
+    }
+  },
+  {
+    "controller": "PlatformsController",
+    "method": "getQRCode",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/platforms/:id/qr-code",
+    "contractMetadata": {
+      "command": "platforms qr-code",
+      "description": "Get QR code for WhatsApp authentication",
+      "category": "Platforms",
+      "requiredScopes": [
+        "platforms:read"
+      ],
+      "outputType": "MessageResponse",
+      "options": {
+        "id": {
+          "required": true,
+          "description": "WhatsApp Platform ID",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Get WhatsApp QR code",
+          "command": "msgcore platforms qr-code --id \"platform-123\""
+        }
+      ]
+    }
+  },
+  {
     "controller": "MessagesController",
     "method": "getMessages",
     "httpMethod": "GET",
@@ -986,261 +1241,6 @@ const CONTRACTS = [
         {
           "description": "Remove thumbs up reaction",
           "command": "msgcore messages unreact --platformId \"platform-123\" --messageId \"msg-456\" --emoji \"👍\""
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "create",
-    "httpMethod": "POST",
-    "path": "/api/v1/projects/:project/platforms",
-    "contractMetadata": {
-      "command": "platforms create",
-      "description": "Configure a new platform integration",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:write"
-      ],
-      "inputType": "CreatePlatformDto",
-      "outputType": "PlatformResponse",
-      "options": {
-        "platform": {
-          "required": true,
-          "description": "Platform type",
-          "choices": [
-            "discord",
-            "telegram",
-            "whatsapp-evo"
-          ],
-          "type": "string"
-        },
-        "name": {
-          "required": true,
-          "description": "Friendly name for the platform instance",
-          "type": "string"
-        },
-        "description": {
-          "description": "Optional description for the platform instance",
-          "type": "string"
-        },
-        "credentials": {
-          "required": true,
-          "description": "Platform credentials (JSON object). Use \"msgcore platforms supported\" to see required fields for each platform.",
-          "type": "object"
-        },
-        "isActive": {
-          "description": "Enable platform",
-          "default": true,
-          "type": "boolean"
-        },
-        "testMode": {
-          "description": "Enable test mode",
-          "default": false,
-          "type": "boolean"
-        }
-      },
-      "examples": [
-        {
-          "description": "Add Discord bot",
-          "command": "msgcore platforms create --platform discord --name \"Main Discord Bot\" --credentials '{\"token\":\"YOUR_DISCORD_BOT_TOKEN\"}'"
-        },
-        {
-          "description": "Add Telegram bot in test mode",
-          "command": "msgcore platforms create --platform telegram --name \"Test Telegram Bot\" --description \"Bot for testing purposes\" --credentials '{\"token\":\"YOUR_TELEGRAM_BOT_TOKEN\"}' --testMode true"
-        },
-        {
-          "description": "Add WhatsApp Evolution API",
-          "command": "msgcore platforms create --platform whatsapp-evo --name \"Production WhatsApp\" --credentials '{\"evolutionApiUrl\":\"https://your-evolution-api.com\",\"evolutionApiKey\":\"YOUR_EVOLUTION_API_KEY\"}'"
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "findAll",
-    "httpMethod": "GET",
-    "path": "/api/v1/projects/:project/platforms",
-    "contractMetadata": {
-      "command": "platforms list",
-      "description": "List configured platforms for project",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:read"
-      ],
-      "outputType": "PlatformResponse[]",
-      "examples": [
-        {
-          "description": "List all platforms",
-          "command": "msgcore platforms list"
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "findOne",
-    "httpMethod": "GET",
-    "path": "/api/v1/projects/:project/platforms/:id",
-    "contractMetadata": {
-      "command": "platforms get",
-      "description": "Get platform configuration details",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:read"
-      ],
-      "outputType": "PlatformResponse",
-      "options": {
-        "id": {
-          "required": true,
-          "description": "Platform ID",
-          "type": "string"
-        }
-      },
-      "examples": [
-        {
-          "description": "Get platform details",
-          "command": "msgcore platforms get --id \"platform-123\""
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "update",
-    "httpMethod": "PATCH",
-    "path": "/api/v1/projects/:project/platforms/:id",
-    "contractMetadata": {
-      "command": "platforms update",
-      "description": "Update platform configuration",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:write"
-      ],
-      "inputType": "UpdatePlatformDto",
-      "outputType": "PlatformResponse",
-      "options": {
-        "name": {
-          "description": "Updated friendly name",
-          "type": "string"
-        },
-        "description": {
-          "description": "Updated description",
-          "type": "string"
-        },
-        "credentials": {
-          "description": "Updated credentials (JSON object)",
-          "type": "object"
-        },
-        "isActive": {
-          "description": "Enable/disable platform",
-          "type": "boolean"
-        },
-        "testMode": {
-          "description": "Enable/disable test mode",
-          "type": "boolean"
-        }
-      },
-      "examples": [
-        {
-          "description": "Update platform name and description",
-          "command": "msgcore platforms update --project my-project --id platform-123 --name \"Updated Bot Name\" --description \"New description\""
-        },
-        {
-          "description": "Update Telegram bot token",
-          "command": "msgcore platforms update --project my-project --id platform-123 --credentials '{\"token\":\"YOUR_NEW_TELEGRAM_TOKEN\"}'"
-        },
-        {
-          "description": "Disable platform",
-          "command": "msgcore platforms update --project my-project --id platform-123 --isActive false"
-        },
-        {
-          "description": "Enable test mode",
-          "command": "msgcore platforms update --project my-project --id platform-123 --testMode true"
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "remove",
-    "httpMethod": "DELETE",
-    "path": "/api/v1/projects/:project/platforms/:id",
-    "contractMetadata": {
-      "command": "platforms delete",
-      "description": "Remove platform configuration",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:write"
-      ],
-      "outputType": "MessageResponse",
-      "options": {
-        "id": {
-          "required": true,
-          "description": "Platform ID",
-          "type": "string"
-        }
-      },
-      "examples": [
-        {
-          "description": "Remove platform",
-          "command": "msgcore platforms delete --id \"platform-123\""
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "registerWebhook",
-    "httpMethod": "POST",
-    "path": "/api/v1/projects/:project/platforms/:id/register-webhook",
-    "contractMetadata": {
-      "command": "platforms register-webhook",
-      "description": "Register webhook URL with platform provider",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:write"
-      ],
-      "outputType": "MessageResponse",
-      "options": {
-        "id": {
-          "required": true,
-          "description": "Platform ID",
-          "type": "string"
-        }
-      },
-      "examples": [
-        {
-          "description": "Register Telegram webhook",
-          "command": "msgcore platforms register-webhook --id \"platform-123\""
-        }
-      ]
-    }
-  },
-  {
-    "controller": "PlatformsController",
-    "method": "getQRCode",
-    "httpMethod": "GET",
-    "path": "/api/v1/projects/:project/platforms/:id/qr-code",
-    "contractMetadata": {
-      "command": "platforms qr-code",
-      "description": "Get QR code for WhatsApp authentication",
-      "category": "Platforms",
-      "requiredScopes": [
-        "platforms:read"
-      ],
-      "outputType": "MessageResponse",
-      "options": {
-        "id": {
-          "required": true,
-          "description": "WhatsApp Platform ID",
-          "type": "string"
-        }
-      },
-      "examples": [
-        {
-          "description": "Get WhatsApp QR code",
-          "command": "msgcore platforms qr-code --id \"platform-123\""
         }
       ]
     }
@@ -2234,13 +2234,38 @@ interface CLIConfig {
   outputFormat?: string;
 }
 
-interface McpMessage {
+// JSON-RPC 2.0 message types (properly typed as union)
+type McpMessage = McpRequest | McpResponse | McpNotification;
+
+interface McpRequest {
   jsonrpc: '2.0';
-  id?: string | number;
-  method?: string;
+  id: string | number;
+  method: string;
   params?: any;
-  result?: any;
-  error?: any;
+}
+
+interface McpNotification {
+  jsonrpc: '2.0';
+  method: string;
+  params?: any;
+}
+
+type McpResponse = McpSuccessResponse | McpErrorResponse;
+
+interface McpSuccessResponse {
+  jsonrpc: '2.0';
+  id: string | number;
+  result: any;
+}
+
+interface McpErrorResponse {
+  jsonrpc: '2.0';
+  id: string | number;
+  error: {
+    code: number;
+    message: string;
+    data?: any;
+  };
 }
 
 interface McpTool {
@@ -2427,19 +2452,19 @@ class McpStdioServer {
     this.rl.on('line', async (line: string) => {
       this.pendingWork++;
       try {
-        const message: McpMessage = JSON.parse(line);
+        const message = JSON.parse(line) as McpRequest | McpNotification;
         const response = await this.handleMessage(message);
         this.writeMessage(response);
       } catch (error) {
         this.writeMessage({
           jsonrpc: '2.0',
-          id: undefined,
+          id: 0,
           error: {
             code: -32700,
             message: 'Parse error',
             data: error instanceof Error ? error.message : String(error),
           },
-        });
+        } as McpErrorResponse);
       } finally {
         this.pendingWork--;
         this.maybeExit();
@@ -2458,56 +2483,58 @@ class McpStdioServer {
     }
   }
 
-  private async handleMessage(message: McpMessage): Promise<McpMessage> {
-    const { method, params, id } = message;
+  private async handleMessage(message: McpRequest | McpNotification): Promise<McpResponse> {
+    const method = message.method;
+    const params = 'params' in message ? message.params : undefined;
+    const id = 'id' in message ? message.id : undefined;
 
     try {
       switch (method) {
         case 'initialize':
-          return this.handleInitialize(id);
+          return this.handleInitialize(id!);
         case 'tools/list':
-          return await this.handleToolsList(id);
+          return await this.handleToolsList(id!);
         case 'tools/call':
-          return await this.handleToolCall(id, params);
+          return await this.handleToolCall(id!, params);
         default:
           return {
             jsonrpc: '2.0',
-            id,
+            id: id!,
             error: { code: -32601, message: `Method not found: ${method}` },
-          };
+          } as McpErrorResponse;
       }
     } catch (error) {
       return {
         jsonrpc: '2.0',
-        id,
+        id: id || 0,
         error: {
           code: -32603,
           message: 'Internal error',
           data: error instanceof Error ? error.message : String(error),
         },
-      };
+      } as McpErrorResponse;
     }
   }
 
-  private handleInitialize(id: string | number | undefined): McpMessage {
+  private handleInitialize(id: string | number): McpSuccessResponse {
     return {
       jsonrpc: '2.0',
       id,
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.2' },
+        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.3' },
       },
     };
   }
 
-  private async handleToolsList(id: string | number | undefined): Promise<McpMessage> {
+  private async handleToolsList(id: string | number): Promise<McpSuccessResponse> {
     await this.fetchUserPermissions();
     const filteredTools = this.getFilteredTools();
     return { jsonrpc: '2.0', id, result: { tools: filteredTools } };
   }
 
-  private async handleToolCall(id: string | number | undefined, params: any): Promise<McpMessage> {
+  private async handleToolCall(id: string | number, params: any): Promise<McpResponse> {
     try {
       const { name, arguments: args } = params || {};
       if (!name) throw new Error('Missing tool name');
@@ -2564,7 +2591,7 @@ class McpStdioServer {
           content: [{ type: 'text', text: JSON.stringify(response.data, null, 2) }],
           isError: false,
         },
-      };
+      } as McpSuccessResponse;
     } catch (error) {
       let errorMessage: string;
       if (axios.isAxiosError(error) && error.response?.data?.message) {
@@ -2573,6 +2600,7 @@ class McpStdioServer {
         errorMessage = error instanceof Error ? error.message : String(error);
       }
 
+      // Return error as result with isError flag (MCP convention for tool errors)
       return {
         jsonrpc: '2.0',
         id,
@@ -2580,7 +2608,7 @@ class McpStdioServer {
           content: [{ type: 'text', text: `Error: ${errorMessage}` }],
           isError: true,
         },
-      };
+      } as McpSuccessResponse;
     }
   }
 
@@ -2625,7 +2653,7 @@ class McpStdioServer {
     return converted;
   }
 
-  private writeMessage(message: McpMessage): void {
+  private writeMessage(message: McpResponse): void {
     console.log(JSON.stringify(message));
   }
 }
