@@ -12,6 +12,12 @@ export function createAnalysisProfilesCommand(): Command {
   analysisProfiles
     .command('create')
     .description('Create a new analysis profile (versioned pipeline)')
+    .option('--name <value>', 'Profile name')
+    .option('--description <value>', 'Profile description')
+    .option('--graphDefinition <value>', 'Analysis graph definition (JSON)')
+    .option('--entitySchemaIds <value>', 'Entity schema IDs (JSON array)')
+    .option('--storeEntities <value>', 'Store extracted entities')
+    .option('--generateTags <value>', 'Generate tags from analysis')
     .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -27,7 +33,15 @@ export function createAnalysisProfilesCommand(): Command {
 
         const gk = new MsgCore(config);
 
-        const result = await gk.analysisProfiles.create({});
+        const result = await gk.analysisProfiles.create({
+      name: options.name,
+      description: options.description,
+      graphDefinition: options.graphDefinition ? (() => { try { return JSON.parse(options.graphDefinition); } catch (e) { throw new Error(`Invalid JSON for --graphDefinition: ${e instanceof Error ? e.message : String(e)}`); } })() : undefined,
+      entitySchemaIds: options.entitySchemaIds ? (typeof options.entitySchemaIds === 'string' ? options.entitySchemaIds.split(',').map((v: string) => v.trim()) : options.entitySchemaIds) : undefined,
+      storeEntities: options.storeEntities !== undefined ? (options.storeEntities === 'true' || options.storeEntities === true) : undefined,
+      generateTags: options.generateTags !== undefined ? (options.generateTags === 'true' || options.generateTags === true) : undefined,
+      project: options.project || config.defaultProject
+        });
 
         formatOutput(result, options.json);
       } catch (error) {

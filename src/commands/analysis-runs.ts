@@ -12,6 +12,11 @@ export function createAnalysisRunsCommand(): Command {
   analysisRuns
     .command('create')
     .description('Execute an analysis run with a profile')
+    .option('--profileId <value>', 'Analysis profile ID')
+    .option('--chatIds <value>', 'Filter by chat IDs (JSON array)')
+    .option('--identityIds <value>', 'Filter by identity IDs (JSON array)')
+    .option('--dateRangeStart <value>', 'Start date for analysis (ISO 8601)')
+    .option('--dateRangeEnd <value>', 'End date for analysis (ISO 8601)')
     .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
     .option('--json', 'Output as JSON')
     .action(async (options) => {
@@ -27,7 +32,14 @@ export function createAnalysisRunsCommand(): Command {
 
         const gk = new MsgCore(config);
 
-        const result = await gk.analysisRuns.create({});
+        const result = await gk.analysisRuns.create({
+      profileId: options.profileId,
+      chatIds: options.chatIds ? (typeof options.chatIds === 'string' ? options.chatIds.split(',').map((v: string) => v.trim()) : options.chatIds) : undefined,
+      identityIds: options.identityIds ? (typeof options.identityIds === 'string' ? options.identityIds.split(',').map((v: string) => v.trim()) : options.identityIds) : undefined,
+      dateRangeStart: options.dateRangeStart,
+      dateRangeEnd: options.dateRangeEnd,
+      project: options.project || config.defaultProject
+        });
 
         formatOutput(result, options.json);
       } catch (error) {

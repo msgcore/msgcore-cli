@@ -101,7 +101,7 @@ analysis profiles get --project my-project --profileId abc123
 
 ### Execute an analysis run with a profile
 ```bash
-analysis runs create --project my-project --profileId abc123 --targetType message --targetIds '["msg-1","msg-2"]'
+analysis runs create --project my-project --profileId abc123 --chatIds '["chat-1","chat-2"]'
 ```
 
 ### Get analysis run statistics for a project
