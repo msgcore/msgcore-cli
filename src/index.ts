@@ -4,8 +4,14 @@
 
 import { Command } from 'commander';
 import { saveConfig, getConfigValue, listConfig } from './lib/utils';
+import { createAnalysisEntitiesCommand } from './commands/analysis-entities';
+import { createAnalysisModelsCommand } from './commands/analysis-models';
+import { createAnalysisProfilesCommand } from './commands/analysis-profiles';
+import { createAnalysisRunsCommand } from './commands/analysis-runs';
+import { createAnalysisSchemasCommand } from './commands/analysis-schemas';
 import { createApikeysCommand } from './commands/api-keys';
 import { createAuthCommand } from './commands/auth';
+import { createChatsCommand } from './commands/chats';
 import { createIdentitiesCommand } from './commands/identities';
 import { createMembersCommand } from './commands/members';
 import { createMessagesCommand } from './commands/messages';
@@ -20,7 +26,7 @@ const program = new Command();
 program
   .name('msgcore')
   .description('MsgCore Universal Messaging Gateway CLI')
-  .version('1.0.3');
+  .version('1.0.5');
 
 // Config command
 const config = new Command('config');
@@ -88,8 +94,14 @@ config
 program.addCommand(config);
 
 // Add permission-aware commands
+  program.addCommand(createAnalysisEntitiesCommand());
+  program.addCommand(createAnalysisModelsCommand());
+  program.addCommand(createAnalysisProfilesCommand());
+  program.addCommand(createAnalysisRunsCommand());
+  program.addCommand(createAnalysisSchemasCommand());
   program.addCommand(createApikeysCommand());
   program.addCommand(createAuthCommand());
+  program.addCommand(createChatsCommand());
   program.addCommand(createIdentitiesCommand());
   program.addCommand(createMembersCommand());
   program.addCommand(createMessagesCommand());

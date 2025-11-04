@@ -62,6 +62,9 @@ const CONTRACTS = [
       "AcceptInviteDto": "export interface AcceptInviteDto {\n  token: string;\n  name: string;\n  password: string;\n}",
       "AddAliasDto": "export interface AddAliasDto {\n  platformId: string;\n  providerUserId: string;\n  providerUserDisplay?: string;\n}",
       "AddMemberDto": "export interface AddMemberDto {\n  email: string;\n  role: ProjectRole;\n}",
+      "AnalysisProfileResponse": "export interface AnalysisProfileResponse {\n  id: string;\n  projectId: string;\n  name: string;\n  description?: string;\n  version: number;\n  graphDefinition: Record<string, any>;\n  entitySchemaIds: string[];\n  storeEntities: boolean;\n  generateTags: boolean;\n  isActive: boolean;\n  createdAt: Date;\n  updatedAt: Date;\n}",
+      "AnalysisRunResponse": "export interface AnalysisRunResponse {\n  id: string;\n  projectId: string;\n  profileId: string;\n  profileVersion: number;\n  chatIds?: string[];\n  identityIds?: string[];\n  dateRangeStart?: Date;\n  dateRangeEnd?: Date;\n  status: string;\n  progress: number;\n  entitiesExtracted: number;\n  errorMessage?: string;\n  tokensUsed?: number;\n  estimatedCostUsd?: number;\n  startedAt?: Date;\n  completedAt?: Date;\n  createdAt: Date;\n}",
+      "AnalysisStatsResponse": "export interface AnalysisStatsResponse {\n  totalRuns: number;\n  runsByStatus: {\n    pending: number;\n    running: number;\n    completed: number;\n    failed: number;\n    cancelled: number;\n  };\n  totalEntitiesExtracted: number;\n  totalTokensUsed: number;\n  totalEstimatedCostUsd: number;\n}",
       "ApiKeyListResponse": "export interface ApiKeyListResponse {\n  id: string;\n  name: string;\n  maskedKey: string;\n  scopes: string[];\n  lastUsedAt: Date | null;\n  expiresAt: Date | null;\n  createdAt: Date;\n}",
       "ApiKeyResponse": "export interface ApiKeyResponse {\n  id: string;\n  key: string;\n  name: string;\n  prefix: string;\n  scopes: string[];\n  expiresAt: Date | null;\n  createdAt: Date;\n}",
       "ApiKeyRollResponse": "export interface ApiKeyRollResponse {\n  id: string;\n  key: string;\n  name: string;\n  prefix: string;\n  scopes: string[];\n  expiresAt: Date | null;\n  createdAt: Date;\n  oldKeyRevokedAt: Date;\n}",
@@ -69,21 +72,29 @@ const CONTRACTS = [
       "AuthResponse": "export interface AuthResponse {\n  accessToken: string;\n  user: {\n    id: string;\n    email: string;\n    name?: string;\n    isAdmin: boolean;\n  };\n}",
       "ButtonDto": "export interface ButtonDto {\n  text: string;\n  value?: string;\n  url?: string;\n  style?: ButtonStyle;\n}",
       "ButtonStyle": "export type ButtonStyle = 'primary' | 'secondary' | 'success' | 'danger' | 'link';",
+      "ChatType": "export type ChatType = 'individual' | 'group' | 'channel';",
       "ContentDto": "export interface ContentDto {\n  subject?: string;\n  text?: string;\n  markdown?: string;\n  html?: string;\n  attachments?: AttachmentDto[];\n  buttons?: ButtonDto[];\n  embeds?: EmbedDto[];\n  platformOptions?: Record<string, any>;\n}",
+      "CreateAnalysisProfileDto": "export interface CreateAnalysisProfileDto {\n  name: string;\n  description?: string;\n  version?: number;\n  graphDefinition: Record<string, any>;\n  entitySchemaIds: string[];\n  storeEntities?: boolean;\n  generateTags?: boolean;\n}",
+      "CreateAnalysisRunDto": "export interface CreateAnalysisRunDto {\n  profileId: string;\n  chatIds?: string[];\n  identityIds?: string[];\n  dateRangeStart?: string;\n  dateRangeEnd?: string;\n}",
       "CreateApiKeyDto": "export interface CreateApiKeyDto {\n  name: string;\n  scopes: string[];\n  expiresInDays?: number;\n}",
+      "CreateEntitySchemaDto": "export interface CreateEntitySchemaDto {\n  name: string;\n  description?: string;\n  extractionType: ExtractionType;\n  properties: Record<string, any>;\n  prompt?: string;\n  model?: string;\n  temperature?: number;\n  ruleDefinition?: Record<string, any>;\n}",
       "CreateIdentityDto": "export interface CreateIdentityDto {\n  displayName?: string;\n  email?: string;\n  metadata?: Record<string, any>;\n  aliases: IdentityAliasDto[];\n}",
       "CreateInviteDto": "export interface CreateInviteDto {\n  email: string;\n}",
-      "CreatePlatformDto": "export interface CreatePlatformDto {\n  platform: PlatformType;\n  name: string;\n  description?: string;\n  credentials: Record<string, any>;\n  isActive?: boolean;\n  testMode?: boolean;\n}",
+      "CreatePlatformDto": "export interface CreatePlatformDto {\n  platform: PlatformType;\n  id?: string;\n  name: string;\n  description?: string;\n  credentials: Record<string, any>;\n  isActive?: boolean;\n  testMode?: boolean;\n}",
       "CreateProjectDto": "export interface CreateProjectDto {\n  name: string;\n  description?: string;\n  id?: string;\n  environment?: ProjectEnvironment;\n  isDefault?: boolean;\n  settings?: any;\n}",
       "CreateWebhookDto": "export interface CreateWebhookDto {\n  name: string;\n  url: string;\n  events: WebhookEventType[];\n  secret?: string;\n}",
       "EmbedAuthorDto": "export interface EmbedAuthorDto {\n  name: string;\n  url?: string;\n  iconUrl?: string;\n}",
       "EmbedDto": "export interface EmbedDto {\n  title?: string;\n  description?: string;\n  color?: string;\n  url?: string;\n  imageUrl?: string;\n  thumbnailUrl?: string;\n  author?: EmbedAuthorDto;\n  footer?: EmbedFooterDto;\n  timestamp?: string;\n  fields?: EmbedFieldDto[];\n}",
       "EmbedFieldDto": "export interface EmbedFieldDto {\n  name: string;\n  value: string;\n  inline?: boolean;\n}",
       "EmbedFooterDto": "export interface EmbedFooterDto {\n  text: string;\n  iconUrl?: string;\n}",
+      "EntitySchemaResponse": "export interface EntitySchemaResponse {\n  id: string;\n  projectId: string;\n  name: string;\n  description?: string;\n  extractionType: ExtractionType;\n  properties: Record<string, any>;\n  prompt?: string;\n  model?: string;\n  temperature?: number;\n  ruleDefinition?: Record<string, any>;\n  isActive: boolean;\n  createdAt: Date;\n  updatedAt: Date;\n}",
+      "ExtractedEntityResponse": "export interface ExtractedEntityResponse {\n  id: string;\n  projectId: string;\n  entitySchemaId: string;\n  entitySchemaName: string;\n  runId: string;\n  profileVersion: number;\n  properties: Record<string, any>;\n  identityId: string | null;\n  chatId: string | null;\n  sourceMessageIds: string[];\n  isLatest: boolean;\n  confidence: number | null;\n  extractedAt: Date;\n}",
+      "ExtractionType": "export type ExtractionType = 'llm_extraction' | 'rule_based' | 'api_logged';",
       "IdentityAliasDto": "export interface IdentityAliasDto {\n  platformId: string;\n  providerUserId: string;\n  providerUserDisplay?: string;\n}",
       "IdentityAliasResponse": "export interface IdentityAliasResponse {\n  id: string;\n  identityId: string;\n  projectId: string;\n  platformId: string;\n  platform: string;\n  providerUserId: string;\n  providerUserDisplay: string | null;\n  linkedAt: Date;\n  linkMethod: 'manual' | 'automatic';\n}",
       "IdentityResponse": "export interface IdentityResponse {\n  id: string;\n  projectId: string;\n  displayName: string | null;\n  email: string | null;\n  metadata: Record<string, any> | null;\n  createdAt: Date;\n  updatedAt: Date;\n  aliases: IdentityAliasResponse[];\n}",
       "InviteResponse": "export interface InviteResponse {\n  inviteLink: string;\n  email: string;\n  expiresAt: Date;\n}",
+      "ListChatsDto": "export interface ListChatsDto {\n  platformId?: string;\n  chatType?: ChatType;\n  limit?: number;\n  offset?: number;\n  search?: string;\n}",
       "LoginDto": "export interface LoginDto {\n  email: string;\n  password: string;\n}",
       "MessageListResponse": "export interface MessageListResponse {\n  messages: ReceivedMessageResponse[];\n  pagination: {\n    total: number;\n    limit: number;\n    offset: number;\n    hasMore: boolean;\n  };\n}",
       "MessageResponse": "export interface MessageResponse {\n  message: string;\n}",
@@ -92,6 +103,7 @@ const CONTRACTS = [
       "MessageStatsResponse": "export interface MessageStatsResponse {\n  received: {\n    totalMessages: number;\n    recentMessages: number;\n    uniqueUsers: number;\n    uniqueChats: number;\n    byPlatform: Array<{\n      platform: string;\n      count: number;\n    }>;\n  };\n  sent: {\n    totalMessages: number;\n    byPlatformAndStatus: Array<{\n      platform: string;\n      status: string;\n      count: number;\n    }>;\n  };\n}",
       "MessageStatusResponse": "export interface MessageStatusResponse {\n  jobId: string;\n  status: string;\n  progress?: number;\n  result?: any;\n  error?: string;\n  createdAt: Date;\n  updatedAt?: Date;\n}",
       "MetadataDto": "export interface MetadataDto {\n  trackingId?: string;\n  tags?: string[];\n  priority?: Priority;\n}",
+      "ModelResponse": "export interface ModelResponse {\n  id: string;\n  name: string;\n  description?: string;\n}",
       "OptionsDto": "export interface OptionsDto {\n  replyTo?: string;\n  silent?: boolean;\n  scheduled?: string;\n}",
       "PermissionResponse": "export interface PermissionResponse {\n  authType: 'api-key' | 'jwt';\n  permissions: string[];\n  project?: {\n    id: string;\n    name: string;\n  };\n  user?: {\n    userId: string;\n    email?: string;\n    name?: string;\n  };\n  apiKey?: {\n    id: string;\n    name: string;\n  };\n}",
       "PlatformLogResponse": "export interface PlatformLogResponse {\n  id: string;\n  projectId: string;\n  platformId?: string;\n  platform: string;\n  level: 'info' | 'warn' | 'error' | 'debug';\n  category: 'connection' | 'webhook' | 'message' | 'error' | 'auth' | 'general';\n  message: string;\n  metadata?: Record<string, any>;\n  error?: string;\n  timestamp: string;\n  platformConfig?: {\n    id: string;\n    platform: string;\n    isActive: boolean;\n  };\n}",
@@ -104,17 +116,20 @@ const CONTRACTS = [
       "ProjectMemberResponse": "export interface ProjectMemberResponse {\n  id: string;\n  projectId: string;\n  userId: string;\n  role: ProjectRole;\n  createdAt: string;\n  updatedAt: string;\n  user: {\n    id: string;\n    email: string;\n    name?: string;\n  };\n}",
       "ProjectResponse": "export interface ProjectResponse {\n  id: string;\n  name: string;\n  description?: string;\n  environment: 'development' | 'staging' | 'production';\n  isDefault: boolean;\n  settings?: Record<string, unknown>;\n  createdAt: string;\n  updatedAt: string;\n  _count?: {\n    apiKeys: number;\n  };\n}",
       "ProjectRole": "export type ProjectRole = 'owner' | 'admin' | 'member' | 'viewer';",
-      "QueryMessagesDto": "export interface QueryMessagesDto {\n  platform?: string;\n  platformId?: string;\n  chatId?: string;\n  userId?: string;\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n  offset?: number;\n  order?: 'asc' | 'desc';\n  raw?: boolean;\n  reactions?: boolean;\n}",
-      "ReceivedMessageResponse": "export interface ReceivedMessageResponse {\n  id: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  messageText: string | null;\n  messageType: string;\n  receivedAt: Date;\n  rawData: any;\n  platformConfig?: {\n    id: string;\n    platform: string;\n    isActive: boolean;\n    testMode: boolean;\n  };\n}",
+      "QueryMessagesDto": "export interface QueryMessagesDto {\n  platformId?: string;\n  chatId?: string;\n  userId?: string;\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n  offset?: number;\n  order?: 'asc' | 'desc';\n  raw?: boolean;\n  reactions?: boolean;\n  direction?: 'sent' | 'received';\n}",
+      "QuickLinkDto": "export interface QuickLinkDto {\n  platformId: string;\n  providerUserId: string;\n  providerUserDisplay?: string;\n  displayName?: string;\n  email?: string;\n}",
+      "ReceivedMessageResponse": "export interface ReceivedMessageResponse {\n  id: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  messageText: string | null;\n  messageType: string;\n  timestamp: Date;\n  direction: string;\n  source: string;\n  rawData: any;\n  platformConfig?: {\n    id: string;\n    platform: string;\n    isActive: boolean;\n    testMode: boolean;\n  };\n}",
       "ReceivedReactionResponse": "export interface ReceivedReactionResponse {\n  id: string;\n  projectId: string;\n  platformId: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  emoji: string;\n  reactionType: 'added' | 'removed';\n  rawData: Record<string, any>;\n  receivedAt: Date;\n}",
       "SendMessageDto": "export interface SendMessageDto {\n  targets: TargetDto[];\n  content: ContentDto;\n  options?: OptionsDto;\n  metadata?: MetadataDto;\n}",
       "SendReactionDto": "export interface SendReactionDto {\n  platformId: string;\n  messageId: string;\n  emoji: string;\n}",
-      "SentMessageListResponse": "export interface SentMessageListResponse {\n  messages: SentMessageResponse[];\n  pagination: {\n    total: number;\n    limit: number;\n    offset: number;\n    hasMore: boolean;\n  };\n}",
-      "SentMessageResponse": "export interface SentMessageResponse {\n  id: string;\n  platform: string;\n  jobId: string | null;\n  providerMessageId: string | null;\n  targetChatId: string;\n  targetUserId: string | null;\n  targetType: string;\n  messageText: string | null;\n  messageContent: Record<string, unknown> | null;\n  status: string;\n  errorMessage: string | null;\n  sentAt: Date | null;\n  createdAt: Date;\n}",
       "SignupDto": "export interface SignupDto {\n  email: string;\n  password: string;\n  name?: string;\n}",
       "SupportedPlatformsResponse": "export interface SupportedPlatformsResponse {\n  platforms: Array<{\n    name: string;\n    displayName: string;\n    connectionType: string;\n    features: {\n      supportsWebhooks: boolean;\n      supportsPolling: boolean;\n      supportsWebSocket: boolean;\n    };\n    capabilities: Array<{\n      capability: string;\n      limitations?: string;\n    }>;\n    credentials: {\n      required: string[];\n      optional: string[];\n      example: Record<string, any>;\n    } | null;\n  }>;\n}",
+      "SyncHistoryDto": "export interface SyncHistoryDto {\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n}",
       "TargetDto": "export interface TargetDto {\n  platformId: string;\n  type: TargetType;\n  id: string;\n}",
-      "TargetType": "export type TargetType = 'user' | 'channel' | 'group';",
+      "TargetType": "export type TargetType = 'chat' | 'identity' | 'messages' | 'date_range';",
+      "UpdateAnalysisProfileDto": "export interface UpdateAnalysisProfileDto {\n  name?: string;\n  description?: string;\n  graphDefinition?: Record<string, any>;\n  entitySchemaIds?: string[];\n  storeEntities?: boolean;\n  generateTags?: boolean;\n}",
+      "UpdateChatDto": "export interface UpdateChatDto {\n  name?: string;\n  avatarUrl?: string;\n  metadata?: any;\n}",
+      "UpdateEntitySchemaDto": "export interface UpdateEntitySchemaDto {\n  name?: string;\n  description?: string;\n  extractionType?: 'llm_extraction' | 'rule_based' | 'api_logged';\n  properties?: Record<string, any>;\n  prompt?: string;\n  model?: string;\n  temperature?: number;\n  ruleDefinition?: Record<string, any>;\n}",
       "UpdateIdentityDto": "export interface UpdateIdentityDto {\n  displayName?: string;\n  email?: string;\n  metadata?: Record<string, any>;\n}",
       "UpdateMemberRoleDto": "export interface UpdateMemberRoleDto {\n  role: ProjectRole;\n}",
       "UpdatePasswordDto": "export interface UpdatePasswordDto {\n  currentPassword: string;\n  newPassword: string;\n}",
@@ -829,7 +844,7 @@ const CONTRACTS = [
     "path": "/api/v1/projects/:project/messages",
     "contractMetadata": {
       "command": "messages list",
-      "description": "List received messages for a project",
+      "description": "List messages for a project (sent and received)",
       "category": "Messages",
       "requiredScopes": [
         "messages:read"
@@ -841,15 +856,6 @@ const CONTRACTS = [
           "description": "Filter by platform ID",
           "type": "string"
         },
-        "platform": {
-          "description": "Filter by platform type (telegram, discord, whatsapp-evo)",
-          "type": "string",
-          "choices": [
-            "telegram",
-            "discord",
-            "whatsapp-evo"
-          ]
-        },
         "chatId": {
           "description": "Filter by chat/channel ID",
           "type": "string"
@@ -857,6 +863,14 @@ const CONTRACTS = [
         "userId": {
           "description": "Filter by user ID",
           "type": "string"
+        },
+        "direction": {
+          "description": "Filter by message direction",
+          "type": "string",
+          "choices": [
+            "sent",
+            "received"
+          ]
         },
         "startDate": {
           "description": "Filter messages after this date (ISO 8601)",
@@ -898,16 +912,20 @@ const CONTRACTS = [
       },
       "examples": [
         {
-          "description": "Get latest 50 messages",
+          "description": "Get all messages (sent + received)",
           "command": "msgcore messages list"
+        },
+        {
+          "description": "Get only received messages",
+          "command": "msgcore messages list --direction received"
+        },
+        {
+          "description": "Get only sent messages",
+          "command": "msgcore messages list --direction sent"
         },
         {
           "description": "Get messages from specific platform instance",
           "command": "msgcore messages list --platformId \"platform-abc123\" --chatId \"123456789\""
-        },
-        {
-          "description": "Get Telegram messages from any instance",
-          "command": "msgcore messages list --platform telegram --chatId \"123456789\""
         },
         {
           "description": "Get messages from last 24 hours",
@@ -941,56 +959,6 @@ const CONTRACTS = [
         {
           "description": "Get message statistics",
           "command": "msgcore messages stats"
-        }
-      ]
-    }
-  },
-  {
-    "controller": "MessagesController",
-    "method": "getSentMessages",
-    "httpMethod": "GET",
-    "path": "/api/v1/projects/:project/messages/sent",
-    "contractMetadata": {
-      "command": "messages sent",
-      "description": "List sent messages for a project",
-      "category": "Messages",
-      "requiredScopes": [
-        "messages:read"
-      ],
-      "outputType": "SentMessageListResponse",
-      "options": {
-        "platform": {
-          "description": "Filter by platform",
-          "type": "string"
-        },
-        "status": {
-          "description": "Filter by status (pending, sent, failed)",
-          "type": "string",
-          "choices": [
-            "pending",
-            "sent",
-            "failed"
-          ]
-        },
-        "limit": {
-          "description": "Number of messages to return",
-          "type": "number",
-          "default": 50
-        },
-        "offset": {
-          "description": "Number of messages to skip",
-          "type": "number",
-          "default": 0
-        }
-      },
-      "examples": [
-        {
-          "description": "Get sent messages",
-          "command": "msgcore messages sent"
-        },
-        {
-          "description": "Get failed messages",
-          "command": "msgcore messages sent --status failed"
         }
       ]
     }
@@ -1474,12 +1442,94 @@ const CONTRACTS = [
   },
   {
     "controller": "IdentitiesController",
+    "method": "search",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/identities/search",
+    "contractMetadata": {
+      "command": "identities search",
+      "description": "Search identities by display name or email",
+      "category": "Identities",
+      "requiredScopes": [
+        "identities:read"
+      ],
+      "outputType": "IdentityResponse[]",
+      "options": {
+        "q": {
+          "required": true,
+          "description": "Search query (min 2 characters)",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Search identities by name",
+          "command": "msgcore identities search --q \"john\""
+        },
+        {
+          "description": "Search identities by email",
+          "command": "msgcore identities search --q \"example.com\""
+        }
+      ]
+    }
+  },
+  {
+    "controller": "IdentitiesController",
+    "method": "quickLink",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/identities/quick-link",
+    "contractMetadata": {
+      "command": "identities quick-link",
+      "description": "Create identity and link platform user in one operation",
+      "category": "Identities",
+      "requiredScopes": [
+        "identities:write"
+      ],
+      "inputType": "QuickLinkDto",
+      "outputType": "IdentityResponse",
+      "options": {
+        "platformId": {
+          "required": true,
+          "description": "Platform configuration ID",
+          "type": "string"
+        },
+        "providerUserId": {
+          "required": true,
+          "description": "Provider-specific user ID",
+          "type": "string"
+        },
+        "providerUserDisplay": {
+          "description": "Display name on the platform",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Display name for the new identity",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email address for the new identity",
+          "type": "string"
+        }
+      },
+      "examples": [
+        {
+          "description": "Quick-link Discord user to new identity",
+          "command": "msgcore identities quick-link --platformId platform-123 --providerUserId \"discord-456\" --displayName \"John Doe\" --email \"john@example.com\""
+        },
+        {
+          "description": "Quick-link with minimal info",
+          "command": "msgcore identities quick-link --platformId platform-123 --providerUserId \"discord-456\" --providerUserDisplay \"JohnD#1234\""
+        }
+      ]
+    }
+  },
+  {
+    "controller": "IdentitiesController",
     "method": "lookup",
     "httpMethod": "GET",
     "path": "/api/v1/projects/:project/identities/lookup",
     "contractMetadata": {
       "command": "identities lookup",
-      "description": "Lookup identity by platform user ID",
+      "description": "Lookup identity by platform user ID (returns null if not found)",
       "category": "Identities",
       "requiredScopes": [
         "identities:read"
@@ -2223,6 +2273,643 @@ const CONTRACTS = [
         }
       ]
     }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "listChats",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/chats",
+    "contractMetadata": {
+      "command": "chats list",
+      "description": "List all chats for a project with filtering and pagination",
+      "category": "Chats",
+      "inputType": "ListChatsDto",
+      "options": {
+        "platformId": {
+          "description": "Filter by platform ID",
+          "type": "string"
+        },
+        "chatType": {
+          "description": "Filter by chat type (individual, group, channel)",
+          "type": "string",
+          "choices": [
+            "individual",
+            "group",
+            "channel"
+          ]
+        },
+        "search": {
+          "description": "Search chats by name or provider chat ID",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Number of chats to return",
+          "type": "number",
+          "default": 50
+        },
+        "offset": {
+          "description": "Number of chats to skip",
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "getChat",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/chats/:chatId",
+    "contractMetadata": {
+      "command": "chats get",
+      "description": "Get details of a specific chat",
+      "category": "Chats",
+      "options": {
+        "chatId": {
+          "required": true,
+          "description": "Chat ID",
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "getChatMessages",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/chats/:chatId/messages",
+    "contractMetadata": {
+      "command": "chats messages",
+      "description": "Get messages for a specific chat with pagination",
+      "category": "Chats",
+      "options": {
+        "chatId": {
+          "required": true,
+          "description": "Chat ID",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Number of messages to return",
+          "type": "number",
+          "default": 50
+        },
+        "offset": {
+          "description": "Number of messages to skip",
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "updateChat",
+    "httpMethod": "PATCH",
+    "path": "/api/v1/projects/:project/chats/:chatId",
+    "contractMetadata": {
+      "command": "chats update",
+      "description": "Update chat metadata (name, avatar, custom metadata)",
+      "category": "Chats",
+      "inputType": "UpdateChatDto",
+      "options": {
+        "chatId": {
+          "required": true,
+          "description": "Chat ID",
+          "type": "string"
+        },
+        "name": {
+          "description": "Chat display name",
+          "type": "string"
+        },
+        "avatarUrl": {
+          "description": "Chat avatar URL",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Custom metadata (JSON string)",
+          "type": "string"
+        }
+      }
+    }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "syncAllChats",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/chats/sync-all",
+    "contractMetadata": {
+      "command": "chats sync-all",
+      "description": "Sync all chats and their messages from all platforms",
+      "category": "Chats",
+      "inputType": "SyncHistoryDto",
+      "options": {
+        "platformId": {
+          "description": "Optional: Sync only chats from specific platform",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "Start date for history sync (ISO 8601)",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "End date for history sync (ISO 8601)",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Maximum number of messages to sync per chat (1-1000)",
+          "type": "number",
+          "default": 100
+        }
+      }
+    }
+  },
+  {
+    "controller": "ChatsController",
+    "method": "syncChatHistory",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/chats/:chatId/sync",
+    "contractMetadata": {
+      "command": "chats sync",
+      "description": "Sync historical messages for a specific chat from the platform provider",
+      "category": "Chats",
+      "inputType": "SyncHistoryDto",
+      "options": {
+        "chatId": {
+          "required": true,
+          "description": "Chat ID",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "Start date for history sync (ISO 8601)",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "End date for history sync (ISO 8601)",
+          "type": "string"
+        },
+        "limit": {
+          "description": "Maximum number of messages to sync (1-1000)",
+          "type": "number",
+          "default": 100
+        }
+      }
+    }
+  },
+  {
+    "controller": "OpenRouterModelsController",
+    "method": "listModels",
+    "httpMethod": "GET",
+    "path": "/api/v1/analysis/models",
+    "contractMetadata": {
+      "command": "analysis models list",
+      "category": "Analysis / Models",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "ModelResponse[]",
+      "description": "List available LLM models from OpenRouter for analysis",
+      "examples": [
+        {
+          "command": "analysis models list",
+          "description": "Get all supported models"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "ExtractedEntitiesController",
+    "method": "listEntities",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/entities",
+    "contractMetadata": {
+      "command": "analysis entities list",
+      "category": "Analysis / Entities",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "ExtractedEntityResponse[]",
+      "description": "List all extracted entities for a project with pagination and sorting"
+    }
+  },
+  {
+    "controller": "ExtractedEntitiesController",
+    "method": "getEntity",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/entities/:id",
+    "contractMetadata": {
+      "command": "analysis entities get",
+      "category": "Analysis / Entities",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "ExtractedEntityResponse",
+      "description": "Get a specific extracted entity by ID"
+    }
+  },
+  {
+    "controller": "EntitySchemasController",
+    "method": "create",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/analysis/schemas/entities",
+    "contractMetadata": {
+      "command": "analysis schemas create",
+      "category": "Analysis / Schemas",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "inputType": "CreateEntitySchemaDto",
+      "outputType": "EntitySchemaResponse",
+      "description": "Create a new entity schema for custom extraction",
+      "options": {
+        "project": {
+          "type": "string",
+          "description": "Project ID",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Schema name",
+          "required": true
+        },
+        "extractionType": {
+          "type": "string",
+          "description": "Extraction type (llm_extraction, rule_based, api_logged)",
+          "required": true
+        },
+        "properties": {
+          "type": "string",
+          "description": "JSON schema for entity properties",
+          "required": true
+        },
+        "prompt": {
+          "type": "string",
+          "description": "LLM prompt (for llm_extraction)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Schema description"
+        }
+      },
+      "examples": [
+        {
+          "command": "analysis schemas create --project my-project --name Sentiment --extractionType llm_extraction --properties '{\"score\":\"number\",\"label\":\"string\"}' --prompt \"Analyze sentiment from -1 to 1\"",
+          "description": "Create a sentiment analysis schema"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "EntitySchemasController",
+    "method": "findAll",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/schemas/entities",
+    "contractMetadata": {
+      "command": "analysis schemas list",
+      "category": "Analysis / Schemas",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "EntitySchemaResponse[]",
+      "description": "List all entity schemas for a project",
+      "options": {
+        "project": {
+          "type": "string",
+          "description": "Project ID",
+          "required": true
+        }
+      },
+      "examples": [
+        {
+          "command": "analysis schemas list --project my-project",
+          "description": "List all entity schemas"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "EntitySchemasController",
+    "method": "findOne",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/schemas/entities/:schemaId",
+    "contractMetadata": {
+      "command": "analysis schemas get",
+      "category": "Analysis / Schemas",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "EntitySchemaResponse",
+      "description": "Get a specific entity schema",
+      "options": {
+        "project": {
+          "type": "string",
+          "description": "Project ID",
+          "required": true
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "Schema ID",
+          "required": true
+        }
+      },
+      "examples": [
+        {
+          "command": "analysis schemas get --project my-project --schemaId abc123",
+          "description": "Get entity schema details"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "EntitySchemasController",
+    "method": "update",
+    "httpMethod": "PATCH",
+    "path": "/api/v1/projects/:project/analysis/schemas/entities/:schemaId",
+    "contractMetadata": {
+      "command": "analysis schemas update",
+      "category": "Analysis / Schemas",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "inputType": "UpdateEntitySchemaDto",
+      "outputType": "EntitySchemaResponse",
+      "description": "Update an entity schema",
+      "options": {
+        "project": {
+          "type": "string",
+          "description": "Project ID",
+          "required": true
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "Schema ID",
+          "required": true
+        },
+        "name": {
+          "type": "string",
+          "description": "New schema name"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "New LLM prompt"
+        }
+      },
+      "examples": [
+        {
+          "command": "analysis schemas update --project my-project --schemaId abc123 --prompt \"New improved prompt\"",
+          "description": "Update schema prompt"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "EntitySchemasController",
+    "method": "delete",
+    "httpMethod": "DELETE",
+    "path": "/api/v1/projects/:project/analysis/schemas/entities/:schemaId",
+    "contractMetadata": {
+      "command": "analysis schemas delete",
+      "category": "Analysis / Schemas",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "outputType": "MessageResponse",
+      "description": "Delete an entity schema (soft delete)",
+      "options": {
+        "project": {
+          "type": "string",
+          "description": "Project ID",
+          "required": true
+        },
+        "schemaId": {
+          "type": "string",
+          "description": "Schema ID",
+          "required": true
+        }
+      },
+      "examples": [
+        {
+          "command": "analysis schemas delete --project my-project --schemaId abc123",
+          "description": "Delete entity schema"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisRunsController",
+    "method": "create",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/analysis/runs",
+    "contractMetadata": {
+      "command": "analysis runs create",
+      "category": "Analysis / Runs",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "inputType": "CreateAnalysisRunDto",
+      "outputType": "AnalysisRunResponse",
+      "description": "Execute an analysis run with a profile",
+      "examples": [
+        {
+          "command": "analysis runs create --project my-project --profileId abc123 --targetType message --targetIds '[\"msg-1\",\"msg-2\"]'",
+          "description": "Run analysis on specific messages"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisRunsController",
+    "method": "getStats",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/runs/stats",
+    "contractMetadata": {
+      "command": "analysis runs stats",
+      "category": "Analysis / Runs",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "AnalysisStatsResponse",
+      "description": "Get analysis run statistics for a project",
+      "examples": [
+        {
+          "command": "analysis runs stats --project my-project",
+          "description": "Get run statistics"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisRunsController",
+    "method": "findAll",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/runs",
+    "contractMetadata": {
+      "command": "analysis runs list",
+      "category": "Analysis / Runs",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "AnalysisRunResponse[]",
+      "description": "List analysis runs for a project with sorting",
+      "examples": [
+        {
+          "command": "analysis runs list --project my-project",
+          "description": "List all runs"
+        },
+        {
+          "command": "analysis runs list --project my-project --sortBy status --sortOrder asc",
+          "description": "List runs sorted by status"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisRunsController",
+    "method": "findOne",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/runs/:runId",
+    "contractMetadata": {
+      "command": "analysis runs get",
+      "category": "Analysis / Runs",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "AnalysisRunResponse",
+      "description": "Get analysis run status and results",
+      "examples": [
+        {
+          "command": "analysis runs get --project my-project --runId xyz789",
+          "description": "Get run details"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisRunsController",
+    "method": "cancel",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/analysis/runs/:runId/cancel",
+    "contractMetadata": {
+      "command": "analysis runs cancel",
+      "category": "Analysis / Runs",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "outputType": "AnalysisRunResponse",
+      "description": "Cancel a running or pending analysis run",
+      "examples": [
+        {
+          "command": "analysis runs cancel --project my-project --runId xyz789",
+          "description": "Cancel analysis run"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisProfilesController",
+    "method": "create",
+    "httpMethod": "POST",
+    "path": "/api/v1/projects/:project/analysis/profiles",
+    "contractMetadata": {
+      "command": "analysis profiles create",
+      "category": "Analysis / Profiles",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "inputType": "CreateAnalysisProfileDto",
+      "outputType": "AnalysisProfileResponse",
+      "description": "Create a new analysis profile (versioned pipeline)",
+      "examples": [
+        {
+          "command": "analysis profiles create --project my-project --name \"Sentiment Analysis\" --graphDefinition '{\"nodes\":[]}' --entitySchemaIds '[\"schema-1\"]'",
+          "description": "Create an analysis profile"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisProfilesController",
+    "method": "findAll",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/profiles",
+    "contractMetadata": {
+      "command": "analysis profiles list",
+      "category": "Analysis / Profiles",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "AnalysisProfileResponse[]",
+      "description": "List all analysis profiles for a project",
+      "examples": [
+        {
+          "command": "analysis profiles list --project my-project",
+          "description": "List all profiles"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisProfilesController",
+    "method": "findOne",
+    "httpMethod": "GET",
+    "path": "/api/v1/projects/:project/analysis/profiles/:profileId",
+    "contractMetadata": {
+      "command": "analysis profiles get",
+      "category": "Analysis / Profiles",
+      "requiredScopes": [
+        "projects:read"
+      ],
+      "outputType": "AnalysisProfileResponse",
+      "description": "Get a specific analysis profile",
+      "examples": [
+        {
+          "command": "analysis profiles get --project my-project --profileId abc123",
+          "description": "Get profile details"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisProfilesController",
+    "method": "update",
+    "httpMethod": "PATCH",
+    "path": "/api/v1/projects/:project/analysis/profiles/:profileId",
+    "contractMetadata": {
+      "command": "analysis profiles update",
+      "category": "Analysis / Profiles",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "inputType": "UpdateAnalysisProfileDto",
+      "outputType": "AnalysisProfileResponse",
+      "description": "Update an analysis profile",
+      "examples": [
+        {
+          "command": "analysis profiles update --project my-project --profileId abc123 --triggerOnReceive true",
+          "description": "Enable real-time trigger"
+        }
+      ]
+    }
+  },
+  {
+    "controller": "AnalysisProfilesController",
+    "method": "delete",
+    "httpMethod": "DELETE",
+    "path": "/api/v1/projects/:project/analysis/profiles/:profileId",
+    "contractMetadata": {
+      "command": "analysis profiles delete",
+      "category": "Analysis / Profiles",
+      "requiredScopes": [
+        "projects:write"
+      ],
+      "outputType": "MessageResponse",
+      "description": "Delete an analysis profile (soft delete)",
+      "examples": [
+        {
+          "command": "analysis profiles delete --project my-project --profileId abc123",
+          "description": "Delete profile"
+        }
+      ]
+    }
   }
 ];
 
@@ -2326,13 +3013,13 @@ class McpStdioServer {
   private shouldExit = false;
   private userPermissions: string[] = [];
   private permissionsFetched = false;
+  private authError?: string;
 
   constructor(client: AxiosInstance, config: CLIConfig) {
     this.client = client;
     this.config = config;
     this.rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout,
       terminal: false,
     });
     this.loadContracts();
@@ -2360,8 +3047,9 @@ class McpStdioServer {
       this.permissionsFetched = true;
     } catch (error) {
       this.permissionsFetched = true;
-      // Log to stderr so it doesn't interfere with JSON-RPC stdout
-      console.error('Warning: Failed to fetch permissions. Some tools may be unavailable.', error instanceof Error ? error.message : String(error));
+      // Don't log to stderr during MCP session as it breaks JSON-RPC protocol
+      // Store error for later use if needed
+      this.authError = error instanceof Error ? error.message : 'Authentication failed';
       this.userPermissions = [];
     }
   }
@@ -2454,7 +3142,10 @@ class McpStdioServer {
       try {
         const message = JSON.parse(line) as McpRequest | McpNotification;
         const response = await this.handleMessage(message);
-        this.writeMessage(response);
+        // Only write response if it's not null (notifications don't get responses)
+        if (response !== null) {
+          this.writeMessage(response);
+        }
       } catch (error) {
         this.writeMessage({
           jsonrpc: '2.0',
@@ -2483,23 +3174,37 @@ class McpStdioServer {
     }
   }
 
-  private async handleMessage(message: McpRequest | McpNotification): Promise<McpResponse> {
+  private async handleMessage(message: McpRequest | McpNotification): Promise<McpResponse | null> {
     const method = message.method;
     const params = 'params' in message ? message.params : undefined;
     const id = 'id' in message ? message.id : undefined;
 
+    // If it's a notification (no id), handle it but don't respond
+    if (id === undefined) {
+      // Handle known notifications silently
+      switch (method) {
+        case 'notifications/initialized':
+        case 'notifications/cancelled':
+          // These are valid notifications, just ignore them
+          return null;
+        default:
+          // Unknown notification, ignore it
+          return null;
+      }
+    }
+
     try {
       switch (method) {
         case 'initialize':
-          return this.handleInitialize(id!);
+          return this.handleInitialize(id);
         case 'tools/list':
-          return await this.handleToolsList(id!);
+          return await this.handleToolsList(id);
         case 'tools/call':
-          return await this.handleToolCall(id!, params);
+          return await this.handleToolCall(id, params);
         default:
           return {
             jsonrpc: '2.0',
-            id: id!,
+            id: id,
             error: { code: -32601, message: `Method not found: ${method}` },
           } as McpErrorResponse;
       }
@@ -2523,7 +3228,7 @@ class McpStdioServer {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.3' },
+        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.5' },
       },
     };
   }

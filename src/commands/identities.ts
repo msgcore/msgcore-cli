@@ -72,8 +72,73 @@ export function createIdentitiesCommand(): Command {
     });
 
   identities
+    .command('search')
+    .description('Search identities by display name or email')
+    .option('--q <value>', 'Search query (min 2 characters)')
+    .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:read"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:read');
+          process.exit(1);
+        }
+
+        const gk = new MsgCore(config);
+
+        const result = await gk.identities.search({ project: options.project || config.defaultProject });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
+    .command('quick-link')
+    .description('Create identity and link platform user in one operation')
+    .option('--platformId <value>', 'Platform configuration ID')
+    .option('--providerUserId <value>', 'Provider-specific user ID')
+    .option('--providerUserDisplay <value>', 'Display name on the platform')
+    .option('--displayName <value>', 'Display name for the new identity')
+    .option('--email <value>', 'Email address for the new identity')
+    .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
+    .option('--json', 'Output as JSON')
+    .action(async (options) => {
+      try {
+        const config = await loadConfig();
+
+        // Check permissions
+        const hasPermission = await checkPermissions(config, ["identities:write"]);
+        if (!hasPermission) {
+          console.error('❌ Insufficient permissions. Required: identities:write');
+          process.exit(1);
+        }
+
+        const gk = new MsgCore(config);
+
+        const result = await gk.identities.quickLink({
+      platformId: options.platformId,
+      providerUserId: options.providerUserId,
+      providerUserDisplay: options.providerUserDisplay,
+      displayName: options.displayName,
+      email: options.email,
+      project: options.project || config.defaultProject
+        });
+
+        formatOutput(result, options.json);
+      } catch (error) {
+        handleError(error);
+      }
+    });
+
+  identities
     .command('lookup')
-    .description('Lookup identity by platform user ID')
+    .description('Lookup identity by platform user ID (returns null if not found)')
     .option('--platformId <value>', 'Platform configuration ID')
     .option('--providerUserId <value>', 'Provider-specific user ID')
     .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
