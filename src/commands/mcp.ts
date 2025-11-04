@@ -72,7 +72,7 @@ const CONTRACTS = [
       "AuthResponse": "export interface AuthResponse {\n  accessToken: string;\n  user: {\n    id: string;\n    email: string;\n    name?: string;\n    isAdmin: boolean;\n  };\n}",
       "ButtonDto": "export interface ButtonDto {\n  text: string;\n  value?: string;\n  url?: string;\n  style?: ButtonStyle;\n}",
       "ButtonStyle": "export type ButtonStyle = 'primary' | 'secondary' | 'success' | 'danger' | 'link';",
-      "ChatType": "export type ChatType = 'individual' | 'group' | 'channel';",
+      "ChatType": "export type ChatType = 'user' | 'group' | 'channel';",
       "ContentDto": "export interface ContentDto {\n  subject?: string;\n  text?: string;\n  markdown?: string;\n  html?: string;\n  attachments?: AttachmentDto[];\n  buttons?: ButtonDto[];\n  embeds?: EmbedDto[];\n  platformOptions?: Record<string, any>;\n}",
       "CreateAnalysisProfileDto": "export interface CreateAnalysisProfileDto {\n  name: string;\n  description?: string;\n  version?: number;\n  graphDefinition: Record<string, any>;\n  entitySchemaIds: string[];\n  storeEntities?: boolean;\n  generateTags?: boolean;\n}",
       "CreateAnalysisRunDto": "export interface CreateAnalysisRunDto {\n  profileId: string;\n  chatIds?: string[];\n  identityIds?: string[];\n  dateRangeStart?: string;\n  dateRangeEnd?: string;\n}",
@@ -119,12 +119,12 @@ const CONTRACTS = [
       "QueryMessagesDto": "export interface QueryMessagesDto {\n  platformId?: string;\n  chatId?: string;\n  userId?: string;\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n  offset?: number;\n  order?: 'asc' | 'desc';\n  raw?: boolean;\n  reactions?: boolean;\n  direction?: 'sent' | 'received';\n}",
       "QuickLinkDto": "export interface QuickLinkDto {\n  platformId: string;\n  providerUserId: string;\n  providerUserDisplay?: string;\n  displayName?: string;\n  email?: string;\n}",
       "ReceivedMessageResponse": "export interface ReceivedMessageResponse {\n  id: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  messageText: string | null;\n  messageType: string;\n  timestamp: Date;\n  direction: string;\n  source: string;\n  rawData: any;\n  platformConfig?: {\n    id: string;\n    platform: string;\n    isActive: boolean;\n    testMode: boolean;\n  };\n}",
-      "ReceivedReactionResponse": "export interface ReceivedReactionResponse {\n  id: string;\n  projectId: string;\n  platformId: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  emoji: string;\n  reactionType: 'added' | 'removed';\n  rawData: Record<string, any>;\n  receivedAt: Date;\n}",
+      "ReceivedReactionResponse": "export interface ReceivedReactionResponse {\n  id: string;\n  projectId: string;\n  platformId: string;\n  platform: string;\n  providerMessageId: string;\n  providerChatId: string;\n  providerUserId: string;\n  userDisplay: string | null;\n  emoji: string;\n  reactionType: 'added' | 'removed';\n  rawData: Record<string, any>;\n  timestamp: Date;\n}",
       "SendMessageDto": "export interface SendMessageDto {\n  targets: TargetDto[];\n  content: ContentDto;\n  options?: OptionsDto;\n  metadata?: MetadataDto;\n}",
       "SendReactionDto": "export interface SendReactionDto {\n  platformId: string;\n  messageId: string;\n  emoji: string;\n}",
       "SignupDto": "export interface SignupDto {\n  email: string;\n  password: string;\n  name?: string;\n}",
       "SupportedPlatformsResponse": "export interface SupportedPlatformsResponse {\n  platforms: Array<{\n    name: string;\n    displayName: string;\n    connectionType: string;\n    features: {\n      supportsWebhooks: boolean;\n      supportsPolling: boolean;\n      supportsWebSocket: boolean;\n    };\n    capabilities: Array<{\n      capability: string;\n      limitations?: string;\n    }>;\n    credentials: {\n      required: string[];\n      optional: string[];\n      example: Record<string, any>;\n    } | null;\n  }>;\n}",
-      "SyncHistoryDto": "export interface SyncHistoryDto {\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n}",
+      "SyncHistoryDto": "export interface SyncHistoryDto {\n  platformId?: string;\n  startDate?: string;\n  endDate?: string;\n  limit?: number;\n}",
       "TargetDto": "export interface TargetDto {\n  platformId: string;\n  type: TargetType;\n  id: string;\n}",
       "TargetType": "export type TargetType = 'chat' | 'identity' | 'messages' | 'date_range';",
       "UpdateAnalysisProfileDto": "export interface UpdateAnalysisProfileDto {\n  name?: string;\n  description?: string;\n  graphDefinition?: Record<string, any>;\n  entitySchemaIds?: string[];\n  storeEntities?: boolean;\n  generateTags?: boolean;\n}",
@@ -2708,10 +2708,33 @@ const CONTRACTS = [
       "inputType": "CreateAnalysisRunDto",
       "outputType": "AnalysisRunResponse",
       "description": "Execute an analysis run with a profile",
+      "options": {
+        "profileId": {
+          "required": true,
+          "description": "Analysis profile ID",
+          "type": "string"
+        },
+        "chatIds": {
+          "description": "Filter by chat IDs (JSON array)",
+          "type": "array"
+        },
+        "identityIds": {
+          "description": "Filter by identity IDs (JSON array)",
+          "type": "array"
+        },
+        "dateRangeStart": {
+          "description": "Start date for analysis (ISO 8601)",
+          "type": "string"
+        },
+        "dateRangeEnd": {
+          "description": "End date for analysis (ISO 8601)",
+          "type": "string"
+        }
+      },
       "examples": [
         {
-          "command": "analysis runs create --project my-project --profileId abc123 --targetType message --targetIds '[\"msg-1\",\"msg-2\"]'",
-          "description": "Run analysis on specific messages"
+          "command": "analysis runs create --project my-project --profileId abc123 --chatIds '[\"chat-1\",\"chat-2\"]'",
+          "description": "Run analysis on specific chats"
         }
       ]
     }
@@ -2818,6 +2841,35 @@ const CONTRACTS = [
       "inputType": "CreateAnalysisProfileDto",
       "outputType": "AnalysisProfileResponse",
       "description": "Create a new analysis profile (versioned pipeline)",
+      "options": {
+        "name": {
+          "required": true,
+          "description": "Profile name",
+          "type": "string"
+        },
+        "description": {
+          "description": "Profile description",
+          "type": "string"
+        },
+        "graphDefinition": {
+          "required": true,
+          "description": "Analysis graph definition (JSON)",
+          "type": "object"
+        },
+        "entitySchemaIds": {
+          "required": true,
+          "description": "Entity schema IDs (JSON array)",
+          "type": "array"
+        },
+        "storeEntities": {
+          "description": "Store extracted entities",
+          "type": "boolean"
+        },
+        "generateTags": {
+          "description": "Generate tags from analysis",
+          "type": "boolean"
+        }
+      },
       "examples": [
         {
           "command": "analysis profiles create --project my-project --name \"Sentiment Analysis\" --graphDefinition '{\"nodes\":[]}' --entitySchemaIds '[\"schema-1\"]'",
@@ -3228,7 +3280,7 @@ class McpStdioServer {
       result: {
         protocolVersion: '2024-11-05',
         capabilities: { tools: {} },
-        serverInfo: { name: 'msgcore-mcp-cli', version: '1.0.5' },
+        serverInfo: { name: 'msgcore-mcp-cli', version: '1.1.0' },
       },
     };
   }
