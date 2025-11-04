@@ -61,6 +61,76 @@ This allows you to:
 
 ## Commands
 
+## Analysis / Entities
+
+### List all extracted entities for a project with pagination and sorting
+```bash
+msgcore analysis entities list --help
+```
+
+### Get a specific extracted entity by ID
+```bash
+msgcore analysis entities get --help
+```
+
+## Analysis / Models
+
+### List available LLM models from OpenRouter for analysis
+```bash
+analysis models list
+```
+
+## Analysis / Profiles
+
+### Create a new analysis profile (versioned pipeline)
+```bash
+analysis profiles create --project my-project --name "Sentiment Analysis" --graphDefinition '{"nodes":[]}' --entitySchemaIds '["schema-1"]'
+```
+
+### List all analysis profiles for a project
+```bash
+analysis profiles list --project my-project
+```
+
+### Get a specific analysis profile
+```bash
+analysis profiles get --project my-project --profileId abc123
+```
+
+## Analysis / Runs
+
+### Execute an analysis run with a profile
+```bash
+analysis runs create --project my-project --profileId abc123 --targetType message --targetIds '["msg-1","msg-2"]'
+```
+
+### Get analysis run statistics for a project
+```bash
+analysis runs stats --project my-project
+```
+
+### List analysis runs for a project with sorting
+```bash
+analysis runs list --project my-project
+```
+
+## Analysis / Schemas
+
+### Create a new entity schema for custom extraction
+```bash
+analysis schemas create --project my-project --name Sentiment --extractionType llm_extraction --properties '{"score":"number","label":"string"}' --prompt "Analyze sentiment from -1 to 1"
+```
+
+### List all entity schemas for a project
+```bash
+analysis schemas list --project my-project
+```
+
+### Get a specific entity schema
+```bash
+analysis schemas get --project my-project --schemaId abc123
+```
+
 ## ApiKeys
 
 ### Generate a new API key
@@ -95,6 +165,23 @@ msgcore auth login --email admin@example.com --password Admin123
 msgcore auth accept-invite --token abc123... --name "John Doe" --password SecurePass123
 ```
 
+## Chats
+
+### List all chats for a project with filtering and pagination
+```bash
+msgcore chats list --help
+```
+
+### Get details of a specific chat
+```bash
+msgcore chats get --help
+```
+
+### Get messages for a specific chat with pagination
+```bash
+msgcore chats messages --help
+```
+
 ## Identities
 
 ### Create a new identity with platform aliases
@@ -107,9 +194,9 @@ msgcore identities create --displayName "John Doe" --email "john@example.com" --
 msgcore identities list
 ```
 
-### Lookup identity by platform user ID
+### Search identities by display name or email
 ```bash
-msgcore identities lookup --platformId platform-123 --providerUserId discord-456
+msgcore identities search --q "john"
 ```
 
 ## Members
@@ -131,7 +218,7 @@ msgcore members update my-project user-123 --role admin
 
 ## Messages
 
-### List received messages for a project
+### List messages for a project (sent and received)
 ```bash
 msgcore messages list
 ```
@@ -141,9 +228,9 @@ msgcore messages list
 msgcore messages stats
 ```
 
-### List sent messages for a project
+### Get a specific message by ID
 ```bash
-msgcore messages sent
+msgcore messages get --messageId "msg-123"
 ```
 
 ## Platform Logs

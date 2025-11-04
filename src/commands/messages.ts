@@ -11,11 +11,11 @@ export function createMessagesCommand(): Command {
 
   messages
     .command('list')
-    .description('List received messages for a project')
+    .description('List messages for a project (sent and received)')
     .option('--platformId <value>', 'Filter by platform ID')
-    .option('--platform <value>', 'Filter by platform type (telegram, discord, whatsapp-evo)')
     .option('--chatId <value>', 'Filter by chat/channel ID')
     .option('--userId <value>', 'Filter by user ID')
+    .option('--direction <value>', 'Filter by message direction')
     .option('--startDate <value>', 'Filter messages after this date (ISO 8601)')
     .option('--endDate <value>', 'Filter messages before this date (ISO 8601)')
     .option('--limit <value>', 'Number of messages to return (1-100)', '50')
@@ -44,9 +44,9 @@ export function createMessagesCommand(): Command {
 
         const result = await gk.messages.list({
       platformId: options.platformId,
-      platform: options.platform,
       chatId: options.chatId,
       userId: options.userId,
+      direction: options.direction,
       startDate: options.startDate,
       endDate: options.endDate,
       limit: options.limit ? (() => { const val = parseInt(options.limit, 10); if (isNaN(val)) throw new Error(`Invalid number for --limit: "${options.limit}"`); return val; })() : undefined,
@@ -86,40 +86,6 @@ export function createMessagesCommand(): Command {
         const gk = new MsgCore(config);
 
         const result = await gk.messages.stats({ project: options.project || config.defaultProject });
-
-        formatOutput(result, options.json);
-      } catch (error) {
-        handleError(error);
-      }
-    });
-
-  messages
-    .command('sent')
-    .description('List sent messages for a project')
-    .option('--platform <value>', 'Filter by platform')
-    .option('--status <value>', 'Filter by status (pending, sent, failed)')
-    .option('--limit <value>', 'Number of messages to return', '50')
-    .option('--offset <value>', 'Number of messages to skip', '0')
-    .option('--project <value>', 'Project (uses MSGCORE_DEFAULT_PROJECT if not provided)')
-    .option('--email.cc <value>', '[Email (SMTP)] CC recipients (Carbon Copy) Multiple recipients who will receive a copy of the email')
-    .option('--email.bcc <value>', '[Email (SMTP)] BCC recipients (Blind Carbon Copy) Multiple recipients who will receive a copy without others knowing')
-    .option('--email.replyTo <value>', '[Email (SMTP)] Reply-To address Email address where replies should be sent (different from sender)')
-    .option('--email.headers <value>', '[Email (SMTP)] Custom SMTP headers Advanced: Add custom headers to the email')
-    .option('--json', 'Output as JSON')
-    .action(async (options) => {
-      try {
-        const config = await loadConfig();
-
-        // Check permissions
-        const hasPermission = await checkPermissions(config, ["messages:read"]);
-        if (!hasPermission) {
-          console.error('❌ Insufficient permissions. Required: messages:read');
-          process.exit(1);
-        }
-
-        const gk = new MsgCore(config);
-
-        const result = await gk.messages.sent({ project: options.project || config.defaultProject });
 
         formatOutput(result, options.json);
       } catch (error) {
